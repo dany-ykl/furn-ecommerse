@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <script type='text/javascript' src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    {% load static %}
+    <link rel='stylesheet' href="{% static 'css/custom.css' %}">
+    <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}">
+    <title>{% block title %}BrandName{% endblock %}</title>
+  </head>
+  <body>
+      <header>
+        <div class='header_wrapper'>
+          <div class="brand">
+            <a href="#">NameBrand</a>
+          </div>
+          <div class="menu">
+            <a href="#">Home</a>
+            <a href="#">Catalog</a>
+            <a href="#">FAQ</a>
+            <a href="#">Contacts</a>
+          </div>
+          <div class='account'>
+          <div class="my_account">
+            <a href="{% url 'accounts:login' %}">My account</a>
+          </div>
+            {% load static %}
+            <div class="cart">
+            <a href="{% url 'cart:cart' %}"><img src='{% static "image/bag.png" %}'></a>
+            <div class='cart_number'>
+              {{order.products.all.count}}
+            </div>
+          </div>
+          </div>
+        </div>
+        </div>
+        {% load static %}
+        </div>
+        <div class='main_image'>
+          <img src='{% static "image/furniture.jpg" %}'>
+          <div class='offer'>
+            <p class='offer_header'>50% SALE OFF</p>
+            <p class='offer_main'>FURNITURE<br> AT COST</p>
+            <p class="offer_description">
+              Only the best furniture for you! Have time to please yourself and your loved ones. Only high-quality and comfortable furniture.
+            </p>
+            <br>
+            <a href='#'>DISCOVERE MORE</a>
+          </div>
+      </header>
+      <div class='pass_block'></div>
+      <div class='content_1'>
+        <p class='content_header'>Popular product</p>
+        <p class='header_description'>
+          The most popular products from their categories
+        </p>
+      </div>
+      <div class="tabs">
+        <div class="tabs__nav">
+          <a class="tabs__link tabs__link_active" href="#sofa">Sofa</a>
+          <a class="tabs__link" href="#table">Table</a>
+          <a class="tabs__link" href="#chair">Chair</a>
+          <a class="tabs__link" href="#bed">Bed</a>
+          <a class="tabs__link" href="#decore">Decore</a>
+        </div>
+        <br>
+        <div class="tabs__content">
+          <div class="tabs__pane tabs__pane_show" id="sofa">
+            <ul class="cart_wrapper">
+            {% for sofa in sofa_list %}
+              <li class="cart_product"><a href="{% url 'shop:product-detail' sofa.slug%}">
+                <img src="{{sofa.image.url}}">
+                <p class='product_header'><a href="#">{{sofa.name}}</a></p>
+                <p class="product_price"><a href='#'>$ {{sofa.price}}</a></p>
+                <button id="{{sofa.slug}}">Add</button>
+                {% block javascript %}
+                  <script>
+                    $('#{{sofa.slug}}').on('click', function (event) {
+                      var slug = '{{sofa.slug}}'
+                      $.ajax({
+                        url: '{% url "cart:add_to_cart_ajax" slug=sofa.slug %}',
+                        type: "GET",
+                        data: {'slug': slug},
+                        dataType: 'json',
+                        headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                        success: function() {  
+                          location.reload()
+                            
+                        }
+                      });
+                      event.preventDefault()
+                    });
+                  </script>
+                {% endblock %}
+              </li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="tabs__pane" id="table">
+            <ul class='cart_wrapper'>
+            {% for table in table_list %}
+            <li class="cart_product"><a href="#">
+              <img src="{{table.image.url}}">
+              <p class='product_header'><a href="#">{{table.name}}</a></p>
+              <p class="product_price"><a href='#'>$ {{table.price}}</a></p>
+            </a>
+            </li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="tabs__pane" id="chair">
+            <ul class='cart_wrapper'>
+            {% for chair in chair_list %}
+            <li class="cart_product"><a href="#">
+              <img src="{{chair.image.url}}">
+              <p class='product_header'><a href="#">{{chair.name}}</a></p>
+              <p class="product_price"><a href='#'>$ {{chair.price}}</a></p>
+            </a>
+            </li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="tabs__pane" id='bed'>
+            <ul class='cart_wrapper'>
+            {% for bed in bed_list %}
+            <li class="cart_product"><a href="#">
+              <img src="{{bed.image.url}}">
+              <p class='product_header'><a href="#">{{bed.name}}</a></p>
+              <p class="product_price"><a href='#'>$ {{bed.price}}</a></p>
+            </a>
+            </li>
+            {% endfor %}
+            </ul>
+          </div>
+          <div class="tabs__pane" id='decore'>
+            <ul class="cart_wrapper">
+            {% for decore in decore_list %}
+            <li class="cart_product"><a href="#">
+              <img src="{{decore.image.url}}">
+              <p class='product_header'><a href="#">{{decore.name}}</a></p>
+              <p class="product_price"><a href='#'>$ {{decore.price}}</a></p>
+            </a>
+            </li>
+            {% endfor %}
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="best_furniture">
+        {% load static %}
+        <div class='img_best_block'>
+        <img src="{% static 'image/best_block.jpg' %}">
+        </div>
+        <div class="header_and_description">
+        <p>BEST FURNITURE<br>
+          MANUFACTURER</p>
+        <p>Archtera offers the widest and best in class range in furniture, 
+          home furnishings & decor, modular kitchens, home improvement and more.
+        </p>
+        <p>
+           We promise to facilitate our customers with a unique and personalized shopping experience.
+          </p>
+          <div class="link_best_block">
+          <a href="#">DISCOVERE MORE</a>
+        </div>
+        </div>
+      </div>
+      <div class="product_like">
+        <p>PRODUCTS YOU MAY LIKE</p>
+          <ul class='cart_wrapper'>
+          {% for table in table_list %}
+          <li class="cart_product"><a href="#">
+            <img src="{{table.image.url}}">
+            <p class='product_header'><a href="#">{{table.name}}</a></p>
+            <div class="product_price">
+            <p><a href='#'>$ {{table.price}}</a></p>
+            </div>
+          </a>
+          </li>
+          {% endfor %}
+          </ul>
+          <a class='link_orange' href='#'>DISCOVERE MORE</a>
+      </div>
+      {% load static %}
+      <script src="{% static 'js/script.js' %}"></script>
+      </body>
+</html>

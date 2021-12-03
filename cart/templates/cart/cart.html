@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset='utf-8'>
+        {% load static %}
+        <link rel='stylesheet' href="{% static 'css/cart_style.css' %}">
+        <script src='https://code.jquery.com/jquery-3.6.0.min.js'></script>
+    </head>
+    <body>
+        <h1>Shopping cart</h1>
+        <h2>List products:</h2>
+        <ul>
+            <li>
+                <p>Name product:</p><strong>Name</strong>
+                <p>Qty:</p><strong>{{order.total_products}}</strong>
+                <p>Price</p><strong>499$</strong>
+                <a href="{% url 'cart:order_registration' %}">buy</a>
+            </li>
+        </ul>
+        <ul>
+            {% for product in order.products.all %}
+                <li>
+                <p>{{product.content_object.name}}</p>
+                <p>{{product.final_price}}</p>
+                <button id='{{product.article}}'>Delete</button>
+                {% block javascript %}
+                    <script>
+                        $('#{{product.article}}').on('click', function(event) {
+                            var article = '{{product.article}}'
+                            $.ajax({
+                                url: '{% url "cart:delete_from_cart_ajax" article=product.article %}',
+                                type: "GET",
+                                data: {'article': article},
+                                dataType: 'json',
+                                headers: { "X-CSRFToken": "{{ csrf_token }}" },
+                                success: function () {
+                                    location.reload();
+                                }
+                            });
+                            event.preventDefault();
+                        });
+                    </script>
+                {% endblock %}
+                </li>
+            {% endfor %}
+        </ul>
+        <p><i>Final price:{{order.final_price}}</i></p>
+    </body>
+</html>

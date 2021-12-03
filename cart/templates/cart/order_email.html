@@ -1,0 +1,17 @@
+Hi!
+<br>
+We have receiwed an order!
+<br>
+Owner: {{order.owner}}
+<br>
+Products:
+<br> 
+{% for product in order.products.all %}{{product}}<br>{% endfor %}
+<br>
+Total products: {{order.total_products}}
+<br>
+Delivery: {{ order.get_delivery_display }}
+<br>
+Address: {{order.address}}
+<br>
+Number: {{order.number}}
